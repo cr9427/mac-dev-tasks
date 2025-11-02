@@ -10,11 +10,27 @@
       - --listapps
       - --getallowsigned
       - --getstealthmode
-      - --getloggingmode
-      - --getloggingopt
   register: fw_state
   changed_when: false
   become: true
+
+- name: Add allowed apps to firewall
+  command:
+    argv:
+      - /usr/libexec/ApplicationFirewall/socketfilterfw
+      - "--add {{ item }}"
+      - "--unblockapp {{ item }}"
+  loop: "{{ firewall_allowed_apps }}"
+  become: yes
+
+- name: Add blocked apps to firewall
+  command:
+    argv:
+      - /usr/libexec/ApplicationFirewall/socketfilterfw
+      - "--add {{ item }}"
+      - "--blockapp {{ item }}"
+  loop: "{{ firewall_blocked_apps }}"
+  become: yes
 
 - name: Activating firewall
   command:
@@ -22,7 +38,7 @@
       - /usr/libexec/ApplicationFirewall/socketfilterfw
       - --setglobalstate
       - "on"
-  when: "'Firewall is disabled' in fw_state.stdout"
+  # when: "'Firewall is disabled' in fw_state.stdout"
   become: yes
 
 - name: Changeing firewall block all mode to {{ firewall_blockall }}
@@ -70,8 +86,6 @@
       - --listapps
       - --getallowsigned
       - --getstealthmode
-      - --getloggingmode
-      - --getloggingopt
   register: fw_state
   changed_when: false
   become: true
