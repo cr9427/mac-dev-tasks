@@ -1,5 +1,5 @@
 ---
-# Configure systems firewall
+# Configure homebrew for multiuser usage
 #
 - name: Disabling brew analytics
   command:
@@ -7,3 +7,8 @@
       - brew
       - analytics
       - "off"
+
+- name: Create a group for homebrew users
+  ansible.builtin.group:
+    name: somegroup
+    state: present
