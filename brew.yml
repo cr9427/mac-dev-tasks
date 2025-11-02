@@ -8,7 +8,33 @@
       - analytics
       - "off"
 
-- name: Create a group for homebrew users
+- name: Createing a group for homebrew users
   ansible.builtin.group:
-    name: somegroup
+    name: brew
     state: present
+  become: true
+
+- name: Adding user {{ ansible_user_id }} to group brew
+  ansible.builtin.user:
+    name: "{{ ansible_user_id }}"
+    groups: brew
+    append: yes
+  become: true
+
+- name: Changing group owner to brew for /opt/homebrew
+  shell:
+    cmd: |
+      chgrp -R brew /opt/homebrew
+  become: true
+
+- name: Changing group permissions to g+w for /opt/homebrew
+  shell:
+    cmd: |
+      chmod -R g+w /opt/homebrew
+  become: true
+
+- name: Changing group permissions sticky for /opt/homebrew
+  shell:
+    cmd: |
+      find /opt/homebrew -type d -exec chmod g+s {} \;
+  become: true
