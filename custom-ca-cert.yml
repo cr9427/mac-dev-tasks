@@ -1,0 +1,17 @@
+---
+# Downloding of custom ca certificate and installing in system as trusted
+#
+
+- name: Downloading cusotom ca certificate from {{ custom_ca_cert_url }}
+  ansible.builtin.get_url:
+    url: "{{ custom_ca_cert_url }}"
+    dest: /tmp/custom_ca.crt
+    mode: '0444'
+
+- name: Adding cusom ca certificate to system store as trused
+  shell:
+    cmd: |
+      security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain /tmp/custom_ca.crt
+  become: true
+
+
