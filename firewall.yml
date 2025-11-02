@@ -18,8 +18,10 @@
   command:
     argv:
       - /usr/libexec/ApplicationFirewall/socketfilterfw
-      - "--add {{ item }}"
-      - "--unblockapp {{ item }}"
+      - --add
+      - "{{ item }}"
+      - --unblockapp
+      - "{{ item }}"
   loop: "{{ firewall_allowed_apps }}"
   become: yes
 
@@ -27,8 +29,10 @@
   command:
     argv:
       - /usr/libexec/ApplicationFirewall/socketfilterfw
-      - "--add {{ item }}"
-      - "--blockapp {{ item }}"
+      - --add
+      - "{{ item }}"
+      - --blockapp
+      - "{{ item }}"
   loop: "{{ firewall_blocked_apps }}"
   become: yes
 
